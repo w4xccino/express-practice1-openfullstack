@@ -38,7 +38,7 @@ app.get("/api/notes", (req, res) => {
 //getting an specific note
 app.get("/api/notes/:id", (req, res) => {
   const id = Number(req.params.id);
-  const note = notes.find((note) => note.id === id);
+  const note = notes.find((note) => note.id === id); //find() finds the first concordance
   if (note) {
     res.json(note);
   } else {
@@ -49,7 +49,7 @@ app.get("/api/notes/:id", (req, res) => {
 // deleting an specific note
 app.delete("/api/notes/:id", (req, res) => {
   const id = Number(req.params.id);
-  notes = notes.filter((note) => note.id !== id);
+  notes = notes.filter((note) => note.id !== id); // filter creates a new array
   res.status(204).end();
 });
 
@@ -64,21 +64,23 @@ const generateMaxId = () => {
 app.post("/api/notes", (req, res) => {
   const body = req.body;
 
+  //if there isn't a content from the body
   if (!body.content) {
     return res.status(400).json({
-      error: "Content Missing",
+      //sending status 400 (bad request)
+      error: "Content Missing", //sending this error
     });
   }
-
+  // setting content for note
   const note = {
-    id: generateMaxId(),
-    content: body.content,
-    important: body.important || false,
-    date: new Date(),
+    id: generateMaxId(), //using the function from above
+    content: body.content, // just setting content
+    important: body.important || false, //if important it's null, it will be set to false
+    date: new Date(), // setting Date from the server
   };
 
-  notes = notes.concat(note);
-  res.json(notes);
+  notes = notes.concat(note); //concat it's important as push()
+  res.json(notes); // we're sending all notes
 });
 
 const PORT = 3001;
