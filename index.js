@@ -25,6 +25,16 @@ let notes = [
   },
 ];
 
+// creating a request logger. This prints in console
+const requestLogger = (req, res, next) => {
+  console.log("Request method: ", req.method);
+  console.log("Path: ", req.path);
+  console.log("Body: ", req.body);
+  console.log("------------------------");
+  next();
+};
+app.use(requestLogger);
+
 //root address return "pa eso"
 app.get("/", (req, res) => {
   res.send("Pa eso?");
@@ -82,6 +92,15 @@ app.post("/api/notes", (req, res) => {
   notes = notes.concat(note); //concat it's important as push()
   res.json(notes); // we're sending all notes
 });
+
+// When a route hasn't been stablished, the following middleware will be run.
+const unknownEndpoint = (req, res, next) => {
+  res.status(404).json({
+    error: "unknown endpoint",
+  });
+};
+
+app.use(unknownEndpoint);
 
 const PORT = 3001;
 app.listen(PORT);
